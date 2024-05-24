@@ -1,0 +1,560 @@
+body {
+    font-family: 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('icons/scott-webb-S_eu4NqJt5Y-unsplash.jpg');
+    background-size: cover;
+}
+
+.todo-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Semi-transparent white background */
+    border-radius: 10px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    max-width: 100%;
+    position: relative;
+    /* Needed to position the container above the background */
+    z-index: 1;
+    /* Ensure the container is above the background */
+    display: flex;
+    flex-direction: column;
+}
+
+.todo-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(1px);
+    /* Apply a blur effect to the background */
+    z-index: -1;
+}
+
+.traffic-lights {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    /* Align items vertically */
+}
+
+/* Styles for traffic lights */
+.traffic-light {
+    border-radius: 100%;
+    padding: 0;
+    height: 12px;
+    width: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    margin-right: 3.5px;
+    background-color: #fb0000;
+    /* Red */
+    position: relative;
+    outline: none;
+}
+
+.traffic-light-minimize {
+    background-color: #ffd500;
+    /* Yellow */
+}
+
+.traffic-light-maximize {
+    background-color: #03ac13;
+    /* Green */
+}
+
+/* Example Styles */
+h1,
+h2 {
+    font-weight: 100;
+}
+
+h2 {
+    margin: 0 0 20px;
+}
+
+.todo-container input[type="text"] {
+    margin-bottom: 10px;
+}
+
+.task-container {
+    overflow: hidden;
+}
+
+input[type="text"],
+button {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+button,
+.modal-button,
+.pagination-button,
+.traffic-light {
+    transition: background-color 0.3s ease;
+    /* Add transition effect */
+}
+
+/* macOS-like hover effect */
+button:hover,
+.modal-button:hover,
+.pagination-button:hover,
+.traffic-light:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    /* macOS blue with opacity */
+}
+
+input[type="text"]::placeholder {
+    color: #999;
+    /* macOS placeholder color */
+}
+
+.task-box {
+    overflow: hidden;
+    max-height: 200px;
+    /* Adjusted to show the tasks by default */
+    transition: max-height 0.5s ease-in-out;
+    /* Corrected transition */
+    flex-grow: 1;
+}
+
+.task-box.closed {
+    max-height: 0;
+    /* Adjusted to hide the tasks initially */
+}
+
+.task-item {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center horizontally */
+    text-align: center;
+    /* Center text */
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.task-item.show {
+    opacity: 1;
+}
+
+.trash-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+    /* Adjusted margin */
+    transition: transform 0.3s ease;
+}
+
+.trash-button:hover {
+    /* Scale the icon slightly on hover */
+    transform: scale(1.2);
+    /* Adjust the scale factor as needed */
+}
+
+.pagination {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.pagination-buttons {
+    display: inline-block;
+}
+
+.page-link {
+    background-color: transparent;
+    border: none;
+    color: #007aff;
+    /* macOS blue color */
+    padding: 5px;
+    /* Adjusted padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0 3px;
+    /* Adjusted margin */
+    cursor: pointer;
+    border-radius: 5px;
+    width: 30px;
+    /* Set a fixed width */
+    height: 30px;
+    /* Set a fixed height */
+    line-height: 30px;
+    /* Center the text vertically */
+    transition: background-color 0.3s ease;
+    /* Add transition effect */
+}
+
+
+.pagination-button {
+    background-color: transparent;
+    border: none;
+    color: #007aff;
+    /* macOS blue color */
+    padding: 1px;
+    /* Adjusted padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px;
+    /* Set a fixed width */
+    height: 30px;
+    /* Set a fixed height */
+    line-height: 30px;
+    /* Center the text vertically */
+    transition: background-color 0.3s ease;
+    /* Add transition effect */
+}
+
+.pagination-button:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    /* macOS blue with opacity */
+}
+
+.page-link:hover {
+    background-color: rgba(0, 122, 255, 0.1);
+    /* macOS blue with opacity */
+}
+
+.page-link.active {
+    background-color: rgba(0, 122, 255, 0.2);
+    /* macOS blue with opacity */
+}
+
+.active {
+    background-color: rgba(0, 122, 255, 0.2);
+    /* macOS blue with opacity */
+}
+
+.pagination-arrow {
+    background-color: transparent;
+    border: none;
+    color: #007aff;
+    /* macOS blue color */
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 10px;
+    /* Adjusted margin */
+}
+
+.pagination-arrow:disabled {
+    color: #a5a5a5;
+    /* Disabled color */
+    cursor: default;
+}
+
+.bullet {
+    display: none;
+    /* Remove the display of the bullet */
+}
+
+.completed-task-container {
+    width: 300px;
+    max-width: calc(100% - 40px);
+    /* Adjusted to fit in the available space */
+    margin-top: 20px;
+    border-left: 1px solid #ccc;
+    /* Added border */
+    padding-left: 20px;
+    /* Added padding */
+    display: flex;
+    /* Center the completed tasks */
+    flex-direction: column;
+    display: none;
+    /* Center the completed tasks */
+    align-items: center;
+    /* Center the completed tasks */
+}
+
+.completed-task-container h2 {
+    text-align: center;
+    /* Center the heading */
+    margin: 0 0 15px;
+    /* Adjusted margin */
+}
+
+.completed-task img.check-mark {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    /* Adjust as needed */
+}
+
+.task-box h2 {
+    text-align: center;
+    /* Center the heading */
+    margin: 0 0 15px;
+    /* Adjusted margin */
+}
+
+.not-completed-task-container {
+    margin-top: 20px;
+    /* Adjusted margin for space between sections */
+    display: none;
+    /* Initially hide the drawer */
+}
+
+.not-completed-task-container.open {
+    display: block;
+    /* Show the drawer when open */
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+.modal-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.draggable-container {
+    position: relative;
+    width: 100px;
+    /* Set width of the draggable container */
+    height: 20px;
+    /* Set height of the draggable container */
+    margin-left: 10px;
+    /* Adjusted margin */
+    background-color: #f0f0f0;
+    /* Set background color of the container */
+    border-radius: 10px;
+    /* Add border radius to the container */
+}
+
+.draggable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    /* Set width of the draggable item */
+    height: 20px;
+    /* Set height of the draggable item */
+    background-color: #007aff;
+    /* Set color of the draggable item */
+    border-radius: 50%;
+    /* Make the draggable item circular */
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.draggable::after {
+    content: '';
+    display: block;
+    width: 70%;
+    /* Width of the handle bar */
+    height: 4px;
+    /* Height of the handle bar */
+    background-color: #bdbdbd;
+    /* Handle bar color */
+    border-radius: 2px;
+    /* Rounded corners */
+}
+
+.draggable:hover::after {
+    background-color: #7f7f7f;
+    /* Darken handle bar color on hover */
+}
+
+.draggable:active::after {
+    background-color: #4d4d4d;
+    /* Darken handle bar color when being dragged */
+}
+
+.task-logo {
+    width: 20px;
+    /* Set the width of the logo */
+    height: 20px;
+    /* Set the height of the logo */
+    background-size: cover;
+    /* Ensure the logo covers the container */
+    border-radius: 50%;
+    /* Make the logo circular */
+    margin-right: 10px;
+    /* Add spacing between the logo and task text */
+    /* Additional styles as needed */
+}
+
+
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #b3d7ff;
+    width: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    /* Ensure the text stays within the progress bar */
+}
+
+.progress-bar-text {
+    font-size: 10px;
+    /* Adjust font size as needed */
+    text-align: center;
+    /* Center-align the text */
+    line-height: 100%;
+    /* Ensure the text vertically aligns with the progress bar */
+    color: #fff;
+    /* Set text color */
+    pointer-events: none;
+    /* Ensure the text doesn't interfere with dragging */
+}
+
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.95);
+    /* Semi-transparent white background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    /* macOS-like shadow */
+    text-align: center;
+    /* Center the content */
+    animation: slideIn 0.3s ease forwards, fadeIn 0.3s ease forwards;
+    /* Slide in and fade in animations */
+}
+
+.date-time-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: right;
+    color: #666;
+    /* macOS gray color */
+    font-size: 12px;
+    /* Adjusted font size */
+    font-weight: bold;
+}
+
+#current-date {
+    margin-bottom: 3px;
+    /* Adjusted margin */
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    /* Adjust spacing */
+}
+
+.modal-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    /* Adjust button spacing */
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #007aff;
+    /* macOS blue color */
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+    /* Add smooth transition */
+}
+
+.check-mark {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    /* Adjust as needed */
+}
+
+.modal-button.cancel {
+    background-color: #ccc;
+    /* macOS gray color */
+}
+
+/* Animation Keyframes */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        /* Start from top */
+    }
+
+    to {
+        transform: translateY(0);
+        /* Slide down */
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Add fade-out animation */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.fadeOut {
+    animation: fadeOut 1s;
+}
+
+.modal-button.cancel {
+    background-color: #ccc;
+}
